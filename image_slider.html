@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+// This page will slide in a picture after 5 seconds, waits 5 seconds and then slides it back out. To be used as cg in PlyCast.
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Picture Slider</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden; /* Prevent scrollbars */
+      background: none; /* No background */
+    }
+
+    .image-container {
+      position: fixed;
+      bottom: 10%;
+      left: -100%; /* Start off-screen */
+    }
+
+    .image-container img {
+      width: auto;     
+      height: auto;    
+      max-width: none; 
+      max-height: none;
+    }
+
+    /* When sliding in */
+    .slide-in {
+      left: 0;
+      transition: left 1s ease-out; /* starts fast, slows at the end */
+    }
+
+    /* When sliding out */
+    .slide-out {
+      left: -100%;
+      transition: left 1s ease-in; /* starts slow, speeds up */
+    }
+  </style>
+</head>
+<body>
+  <div class="image-container" id="imageBox">
+    <img src="myimage.png" alt="Sliding Image">
+  </div>
+
+  <script>
+    const imageBox = document.getElementById('imageBox');
+
+    // Wait 5 seconds before sliding in
+    setTimeout(() => {
+      imageBox.classList.add('slide-in');
+
+      // After sliding in, wait 5s then slide out
+      setTimeout(() => {
+        imageBox.classList.remove('slide-in');
+        imageBox.classList.add('slide-out');
+      }, 5000);
+    }, 5000);
+  </script>
+</body>
+</html>
+
