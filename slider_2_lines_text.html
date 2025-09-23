@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+// This site slides in 2 lines of text after 5 seconds, waits 5 seconds and then slides it back out
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sliding Text</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: none;
+    }
+
+    .container {
+      position: absolute;
+      bottom: 15%;
+      left: -100%; /* start completely off-screen */
+      white-space: nowrap;
+      font-family: Arial, sans-serif;
+      animation: slideInOut 15s forwards;
+      animation-delay: 5s;
+    }
+
+    .line1 {
+      font-size: 18pt;
+    }
+
+    .line2 {
+      font-size: 12pt;
+    }
+
+    @keyframes slideInOut {
+      0% { left: -100%; }
+      20% { left: 200px; animation-timing-function: ease-out; } /* ease in */
+      60% { left: 200px; } /* hold */
+      80% { left: -100%; animation-timing-function: ease-in; } /* ease out */
+      100% { left: -100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="line1">This is the first line</div>
+    <div class="line2">This is the second line</div>
+  </div>
+</body>
+</html>
