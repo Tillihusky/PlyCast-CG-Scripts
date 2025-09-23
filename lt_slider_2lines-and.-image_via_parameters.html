@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+// This page slides in 2 lines of text with a picture in front of it to be used as a lower thirds animation in plycast. You can define the texts and image via parameters. If no image is provided it will skip the image.
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lower third slider (2 Lines) plus image</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: none;
+    }
+
+    .container {
+      position: absolute;
+      bottom: 15%;
+      left: -100%; /* start completely off-screen */
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Arial, sans-serif;
+      animation: slideInOut 15s ease-in-out forwards;
+      animation-delay: 5s;
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .line1 {
+      font-size: 18pt;
+    }
+
+    .line2 {
+      font-size: 12pt;
+    }
+
+    img {
+      width: 150px;
+      height: 150px;
+    }
+
+    @keyframes slideInOut {
+      0% { left: -100%; }
+      33% { left: 200px; } /* slide in to 200px from the left */
+      66% { left: 200px; } /* hold for 5s */
+      85% { left: -100%; } /* slide out faster (over ~3s) */
+      100% { left: -100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <img id="slideImage" alt="Sliding Image" style="display:none;">
+    <div class="text">
+      <div class="line1" id="line1">This is the first line</div>
+      <div class="line2" id="line2">This is the second line</div>
+    </div>
+  </div>
+
+  <script>
+    // Get URL parameters e.g. sliding.html?line1=Title&line2=Subtitle&img=https://example.com/image.jpg
+    const params = new URLSearchParams(window.location.search);
+    const line1Text = params.get("line1");
+    const line2Text = params.get("line2");
+    const imageUrl = params.get("img");
+
+    if (line1Text) document.getElementById("line1").textContent = line1Text;
+    if (line2Text) document.getElementById("line2").textContent = line2Text;
+    if (imageUrl) {
+      const img = document.getElementById("slideImage");
+      img.src = imageUrl;
+      img.style.display = "block";
+    }
+  </script>
+</body>
+</html>
