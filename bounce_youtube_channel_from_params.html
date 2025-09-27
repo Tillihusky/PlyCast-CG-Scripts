@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Bouncer, Youtube Channel - Text from parameters</title>
+// This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. It expects a filename that starts with the name of the youtube channel, followed by " -". It will strip everything after and including " -"
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    background: transparent;
+  }
+
+  .container {
+    position: absolute;
+    bottom: 10%;
+    left: 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: scale(0);
+  }
+
+  .icon {
+    height: 90px;
+    width: auto;
+  }
+
+  .bounce-text {
+    font-size: 3rem;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <img src="https://via.placeholder.com/90" alt="icon" class="icon">
+  <div class="bounce-text">Loading...</div>
+</div>
+
+<script>
+  const container = document.querySelector('.container');
+  const textElement = document.querySelector('.bounce-text');
+
+  // --- Get filename from URL ---
+  const params = new URLSearchParams(window.location.search);
+  let filename = params.get('filename') || 'No name';
+
+  // Remove the extension
+  let nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+
+  // Strip everything after " -" (space minus)
+  const index = nameWithoutExt.indexOf(" -");
+  if (index !== -1) {
+    nameWithoutExt = nameWithoutExt.substring(0, index);
+  }
+
+  // Prepend '@'
+  textElement.textContent = `@${nameWithoutExt}`;
+
+  // --- Bounce in (spring) ---
+  let scale = 0;
+  let velocity = 0;
+  const target = 1;
+  const spring = 0.1;
+  const damping = 0.8;
+  const delay = 1000;
+
+  function animateSpringIn() {
+    const force = spring * (target - scale);
+    velocity = (velocity + force) * damping;
+    scale += velocity;
+
+    container.style.transform = `scale(${scale})`;
+
+    if (Math.abs(scale - target) > 0.001 || Math.abs(velocity) > 0.001) {
+      requestAnimationFrame(animateSpringIn);
+    } else {
+      container.style.transform = `scale(${target})`;
+    }
+  }
+
+  setTimeout(() => {
+    animateSpringIn();
+  }, delay);
+
+  // --- Smooth zoom out after 5 seconds ---
+  const vanishDelay = 5000 + delay;
+
+  setTimeout(() => {
+    container.style.transition = 'transform 0.5s ease-in-out';
+    container.style.transform = 'scale(0)';
+  }, vanishDelay);
+</script>
+
+</body>
+</html>
