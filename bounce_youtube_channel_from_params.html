@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <title>Bouncer, Youtube Channel - Text from parameters</title>
-// This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. It expects a filename that starts with the name of the youtube channel, followed by " -". It will strip everything after and including " -"
+// This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. 
+// It expects a filename in the URL that starts with the name of the youtube channel, followed by " -". Like script.html?filename=channelname - video.mp4 
+// It will strip everything after and including " -" and then add an @ in front of it.
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,7 +41,7 @@
 <body>
 
 <div class="container">
-  <img src="https://via.placeholder.com/90" alt="icon" class="icon">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="youtube-icon" class="icon">
   <div class="bounce-text">Loading...</div>
 </div>
 
