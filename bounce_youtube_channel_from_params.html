@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <title>Bouncer, Youtube Channel - Text from parameters</title>
-// This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. 
-// It expects a filename in the URL that starts with the name of the youtube channel, followed by " -". Like script.html?filename=channelname - video.mp4 
-// It will strip everything after and including " -" and then add an @ in front of it.
+<!-- This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. 
+It expects a filename in the URL that starts with the name of the youtube channel, followed by " -". Like script.html?filename=channelname - video.mp4 
+It will strip everything after and including " -" and then add an @ in front of it.-->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -92,7 +92,7 @@
   }, delay);
 
   // --- Smooth zoom out after 5 seconds ---
-  const vanishDelay = 5000 + delay;
+  const vanishDelay = 8000 + delay;
 
   setTimeout(() => {
     container.style.transition = 'transform 0.5s ease-in-out';
