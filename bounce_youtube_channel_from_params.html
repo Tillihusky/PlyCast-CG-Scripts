@@ -4,17 +4,17 @@
 <!-- This script uses the parameters in the url it gets from CasparCG to show an animated lower third. A picture, followed by a text. 
 It expects a filename in the URL that starts with the name of the youtube channel, followed by " -". Like script.html?filename=channelname - video.mp4 
 It will strip everything after and including " -" and then add an @ in front of it.-->
-<head>
+
+  <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
   body {
     margin: 0;
+    width: 100vw;
     height: 100vh;
-    position: relative;
-    display: flex;
-    align-items: flex-end;
     background: transparent;
+    overflow: hidden;
   }
 
   .container {
@@ -23,8 +23,11 @@ It will strip everything after and including " -" and then add an @ in front of 
     left: 100px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+
     transform: scale(0);
+    transform-origin: left bottom;
+    will-change: transform;
   }
 
   .icon {
@@ -33,47 +36,71 @@ It will strip everything after and including " -" and then add an @ in front of 
   }
 
   .bounce-text {
-    font-size: 3rem;
-    display: inline-block;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 41pt;
+    font-weight: 600;
+    color: #ffffff;
+
+    /* CasparCG key/fill safe shadow (1080p25) */
+    text-shadow:
+      0 2px 2px rgba(0,0,0,0.70),
+      0 0 1px rgba(0,0,0,0.95);
+
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
   }
 </style>
 </head>
+
 <body>
 
 <div class="container">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="youtube-icon" class="icon">
-  <div class="bounce-text">Loading...</div>
+  <img src="YouTube.svg" class="icon" alt="">
+  <div class="bounce-text">Loading…</div>
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+
   const container = document.querySelector('.container');
-  const textElement = document.querySelector('.bounce-text');
+  const textEl = document.querySelector('.bounce-text');
 
-  // --- Get filename from URL ---
+  /* -----------------------------
+     URL PARAMETER PARSING
+     ----------------------------- */
+
   const params = new URLSearchParams(window.location.search);
-  let filename = params.get('filename') || 'No name';
 
-  // Remove the extension
-  let nameWithoutExt = filename.replace(/\.[^/.]+$/, "");
+  // Prefer ?file= (already filename only), fallback to ?fullfile=
+  let raw = params.get('file') || params.get('fullfile') || '';
 
-  // Strip everything after " -" (space minus)
-  const index = nameWithoutExt.indexOf(" -");
-  if (index !== -1) {
-    nameWithoutExt = nameWithoutExt.substring(0, index);
+  // Strip directories (handles Windows + Unix paths)
+  raw = raw.split('/').pop().split('\\').pop();
+
+  // Remove extension
+  let name = raw.replace(/\.[^/.]+$/, '');
+
+  // Strip everything after first " - " (space-dash-space)
+  const cutIndex = name.indexOf(' - ');
+  if (cutIndex !== -1) {
+    name = name.slice(0, cutIndex);
   }
 
-  // Prepend '@'
-  textElement.textContent = `@${nameWithoutExt}`;
+  // Final text
+  textEl.textContent = `@${name}`;
 
-  // --- Bounce in (spring) ---
+  /* -----------------------------
+     SPRING BOUNCE IN
+     ----------------------------- */
+
   let scale = 0;
   let velocity = 0;
   const target = 1;
   const spring = 0.1;
   const damping = 0.8;
-  const delay = 1000;
 
-  function animateSpringIn() {
+  function springIn() {
     const force = spring * (target - scale);
     velocity = (velocity + force) * damping;
     scale += velocity;
@@ -81,23 +108,25 @@ It will strip everything after and including " -" and then add an @ in front of 
     container.style.transform = `scale(${scale})`;
 
     if (Math.abs(scale - target) > 0.001 || Math.abs(velocity) > 0.001) {
-      requestAnimationFrame(animateSpringIn);
+      requestAnimationFrame(springIn);
     } else {
-      container.style.transform = `scale(${target})`;
+      container.style.transform = 'scale(1)';
     }
   }
 
-  setTimeout(() => {
-    animateSpringIn();
-  }, delay);
+  // Start after 1 second
+  setTimeout(springIn, 1000);
 
-  // --- Smooth zoom out after 5 seconds ---
-  const vanishDelay = 8000 + delay;
+  /* -----------------------------
+     SMOOTH ZOOM OUT (NO BOUNCE)
+     ----------------------------- */
 
   setTimeout(() => {
     container.style.transition = 'transform 0.5s ease-in-out';
     container.style.transform = 'scale(0)';
-  }, vanishDelay);
+  }, 10000); // 1s delay + 5s on screen
+
+});
 </script>
 
 </body>
