@@ -36,20 +36,23 @@ It will strip everything after and including " -" and then add an @ in front of 
   }
 
   .bounce-text {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 41pt;
-    font-weight: 600;
-    color: #ffffff;
-
-    /* CasparCG key/fill safe shadow (1080p25) */
-    text-shadow:
-      0 2px 2px rgba(0,0,0,0.70),
-      0 0 1px rgba(0,0,0,0.95);
-
-    white-space: nowrap;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: geometricPrecision;
-  }
+   font-family: Helvetica, Arial, sans-serif;
+   font-size: 41pt;
+   font-weight: 600;
+   color: #ffffff;
+ 
+   text-shadow:
+     0 2px 2px rgba(0,0,0,0.70),
+     0 0 1px rgba(0,0,0,0.95);
+ 
+   white-space: nowrap;
+ 
+   -webkit-font-smoothing: antialiased;
+   text-rendering: geometricPrecision;
+ 
+   /* vertical optical alignment tweak */
+   transform: translateY(-3px);
+ }
 </style>
 </head>
 
