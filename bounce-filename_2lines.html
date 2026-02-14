@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .container {
+    position: absolute;
+    bottom: 10%;
+    left: 100px;
+    display: flex;
+    align-items: center;       /* center text block to image */
+    gap: 12px;
+
+    transform: scale(0);
+    transform-origin: left bottom;
+    will-change: transform;
+  }
+
+  .icon {
+    height: 110px;
+    width: auto;
+    display: block;
+  }
+
+  /* Wrap for the 2 lines */
+  .text-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* center the two lines as a block */
+    line-height: 1.05;
+  }
+
+.line1, .line2 {
+  font-family: Helvetica, Arial, sans-serif;
+  color: #ffffff;
+
+  text-shadow:
+    0 2px 2px rgba(0,0,0,0.70),
+    0 0 1px rgba(0,0,0,0.95);
+
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+.line1 {
+  font-size: 41pt;
+  font-weight: 600;     /* bold */
+  transform: translateY(-2px);
+}
+
+.line2 {
+  font-size: 33pt;
+  font-weight: 400;     /* NOT bold */
+  transform: translateY(-2px);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <img src="NFC.svg" class="icon" alt="">
+  <div class="text-block">
+    <div class="line1">Loading…</div>
+    <div class="line2"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector('.container');
+  const line1El = document.querySelector('.line1');
+  const line2El = document.querySelector('.line2');
+
+  const params = new URLSearchParams(window.location.search);
+
+  // Prefer ?file=, fallback to ?fullfile=
+  let raw = params.get('file') || params.get('fullfile') || '';
+
+  // Strip directories (Windows + Unix)
+  raw = raw.split('/').pop().split('\\').pop();
+
+  // Remove extension
+  let base = raw.replace(/\.[^/.]+$/, '');
+
+  // Split on " - " (space-dash-space) ONLY
+  const parts = base.split(' - ');
+
+  // Apply rules:
+  // line 1: before first dash
+  // line 2: after first dash, before next dash (if any)
+  const l1 = (parts[0] || '').trim();
+  const l2 = (parts[1] || '').trim();
+
+  line1El.textContent = l1 || 'Unknown';
+  line2El.textContent = l2;
+
+  // If there is no second part, hide line2 (keeps centering nice)
+  if (!l2) {
+    line2El.style.display = 'none';
+  }
+
+  // ---- Spring bounce in ----
+  let scale = 0;
+  let velocity = 0;
+  const target = 1;
+  const spring = 0.1;
+  const damping = 0.8;
+
+  function springIn() {
+    const force = spring * (target - scale);
+    velocity = (velocity + force) * damping;
+    scale += velocity;
+
+    container.style.transform = `scale(${scale})`;
+
+    if (Math.abs(scale - target) > 0.001 || Math.abs(velocity) > 0.001) {
+      requestAnimationFrame(springIn);
+    } else {
+      container.style.transform = 'scale(1)';
+    }
+  }
+
+  // Start after 1s
+  setTimeout(springIn, 1000);
+
+  // ---- Smooth zoom out after 5s on screen ----
+  setTimeout(() => {
+    container.style.transition = 'transform 0.5s ease-in-out';
+    container.style.transform = 'scale(0)';
+  }, 10000); // 1s delay + Xs display
+});
+</script>
+
+</body>
+</html>
